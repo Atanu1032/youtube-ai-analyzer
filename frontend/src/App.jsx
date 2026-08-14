@@ -1,4 +1,5 @@
 import { useState } from "react";
+const API_URL = import.meta.env.VITE_API_URL;
 
 function getYouTubeVideoId(url) {
   try {
@@ -35,7 +36,7 @@ function App() {
   const loadHistory = async () => {
     try {
       const response = await fetch(
-        "https://youtube-ai-analyzer-smfo.onrender.com/api/analyses"
+        `${API_URL}/api/analyses`
       );
 
       if (!response.ok) {
@@ -67,7 +68,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `https://youtube-ai-analyzer-smfo.onrender.com/api/analyses/${id}`,
+        `${API_URL}/api/analyses/${id}`,
         {
           method: "DELETE",
         }
