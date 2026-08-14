@@ -55,6 +55,33 @@ app.get("/hello", (req, res) => {
   res.send("HELLO ROUTE WORKS");
 });
 
+// Temporary route to check available Gemini models
+app.get("/api/list-models", async (req, res) => {
+  try {
+    const models = await ai.models.list();
+
+    const availableModels = [];
+
+    for await (const model of models) {
+      availableModels.push({
+        name: model.name,
+        displayName: model.displayName,
+        supportedActions: model.supportedActions,
+      });
+    }
+
+    res.json({
+      models: availableModels,
+    });
+  } catch (error) {
+    console.error("List Models Error:", error);
+
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+});
+
 // Gemini test route
 app.get("/api/test-gemini", async (req, res) => {
   try {
