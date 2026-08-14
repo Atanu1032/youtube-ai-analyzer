@@ -166,10 +166,35 @@ ${englishTranscript}
 
 console.log("Sending transcript to Gemini...");
 
-const aiResponse = await ai.models.generateContent({
-  model: "gemini-flash-latest",
-  contents: prompt,
-});
+let aiResponse;
+
+for (let attempt = 1; attempt <= 3; attempt++) {
+  try {
+    console.log(`Sending request to Gemini (attempt ${attempt}/3)...`);
+
+    aiResponse = await ai.models.generateContent({
+      model: "gemini-flash-latest",
+      contents: prompt,
+    });
+
+    break;
+  } catch (error) {
+    console.error(`Gemini attempt ${attempt} failed:`, error.message);
+
+    const isTemporaryError =
+      error.message?.includes("503") ||
+      error.message?.includes("UNAVAILABLE") ||
+      error.message?.toLowerCase().includes("high demand");
+
+    if (!isTemporaryError || attempt === 3) {
+      throw error;
+    }
+
+    console.log("Gemini is temporarily unavailable. Retrying in 3 seconds...");
+
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+  }
+}
 
 const analysis = JSON.parse(aiResponse.text);
 
