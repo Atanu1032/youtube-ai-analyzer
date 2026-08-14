@@ -86,7 +86,7 @@ app.get("/api/list-models", async (req, res) => {
 app.get("/api/test-gemini", async (req, res) => {
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-3.5-flash",
       contents: "Say hello and tell me you are working.",
     });
 
@@ -122,7 +122,7 @@ console.log("Transcript fetched successfully!");
 console.log("Romanizing transcript...");
 
 const romanizationResponse = await ai.models.generateContent({
-  model: "gemini-2.5-flash",
+  model: "gemini-3.5-flash",
   contents: `
 Convert the following Hindi transcript from Devanagari script into Romanized Hindi using English/Latin letters.
 
@@ -200,7 +200,7 @@ for (let attempt = 1; attempt <= 3; attempt++) {
     console.log(`Sending request to Gemini (attempt ${attempt}/3)...`);
 
     aiResponse = await ai.models.generateContent({
-      model: "gemini-2.5-flash ",
+      model: "gemini-3.5-flash",
       contents: prompt,
     });
 
