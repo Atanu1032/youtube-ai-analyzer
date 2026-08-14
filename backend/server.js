@@ -94,9 +94,17 @@ console.log("Transcript fetched successfully!");
 
 console.log("Romanizing transcript...");
 
-const romanizationResponse = await ai.models.generateContent({
-  model: "gemini-3.5-flash",
-  contents: `
+let romanizationResponse;
+
+for (let attempt = 1; attempt <= 3; attempt++) {
+  try {
+    console.log(
+      `Sending Romanization request to Gemini (attempt ${attempt}/3)...`
+    );
+
+    romanizationResponse = await ai.models.generateContent({
+      model: "gemini-3.5-flash",
+      contents: `
 Convert the following Hindi transcript from Devanagari script into Romanized Hindi using English/Latin letters.
 
 IMPORTANT RULES:
@@ -120,7 +128,31 @@ Main aaj aapko is video ke baare mein bataunga.
 Transcript:
 ${transcript}
 `,
-});
+    });
+
+    break;
+  } catch (error) {
+    console.error(
+      `Romanization attempt ${attempt} failed:`,
+      error.message
+    );
+
+    const isTemporaryError =
+      error.message?.includes("503") ||
+      error.message?.includes("UNAVAILABLE") ||
+      error.message?.toLowerCase().includes("high demand");
+
+    if (!isTemporaryError || attempt === 3) {
+      throw error;
+    }
+
+    console.log(
+      "Gemini is temporarily unavailable during Romanization. Retrying in 3 seconds..."
+    );
+
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+  }
+}
 
 const englishTranscript = romanizationResponse.text;
 
