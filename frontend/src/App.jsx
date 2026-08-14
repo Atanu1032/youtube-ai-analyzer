@@ -35,7 +35,7 @@ function App() {
   const loadHistory = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/analyses"
+        "https://youtube-ai-analyzer-smfo.onrender.com/api/analyses"
       );
 
       if (!response.ok) {
@@ -67,7 +67,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/analyses/${id}`,
+        `https://youtube-ai-analyzer-smfo.onrender.com/api/analyses/${id}`,
         {
           method: "DELETE",
         }
@@ -125,7 +125,7 @@ function App() {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/analyze",
+        "https://youtube-ai-analyzer-smfo.onrender.com/api/analyze",
         {
           method: "POST",
           headers: {
