@@ -262,7 +262,7 @@ app.delete("/api/analyses/:id", async (req, res) => {
   }
 });
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 app.get("/hello", (req, res) => {
   res.send("HELLO ROUTE WORKS");
 });
